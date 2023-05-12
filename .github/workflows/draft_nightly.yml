@@ -51,13 +51,13 @@ jobs:
           GH_TOKEN: ${{ secrets.BOT_TOKEN }}
       - name: Create new draft release
         if: steps.release-exists.outcome == 'failure' && steps.release-exists.conclusion == 'success'
-        run: gh release create -d $BINARY_NAME-$VERSION-$CHANNEL -t $BINARY_NAME-$VERSION-$CHANNEL -F changelog.md target/debian/${BINARY_NAME}_${VERSION}_amd64.deb#c2ncl_amd64.deb
+        run: gh release create -R nxthat/c2ncl -d $BINARY_NAME-$VERSION-$CHANNEL -t $BINARY_NAME-$VERSION-$CHANNEL -F changelog.md target/debian/${BINARY_NAME}_${VERSION}_amd64.deb#c2ncl_amd64.deb
         env:
           GH_TOKEN: ${{ secrets.BOT_TOKEN }}
       - name: Update draft release
         if: steps.release-exists.outcome == 'success' && steps.release-exists.conclusion == 'success'
         run: |
-          gh release delete-asset -y $BINARY_NAME-$VERSION-$CHANNEL ${BINARY_NAME}_${VERSION}_amd64.deb || true
-          gh release upload $BINARY_NAME-$VERSION-$CHANNEL target/debian/${BINARY_NAME}_${VERSION}_amd64.deb#c2ncl_amd64.deb
+          gh release delete-asset -R nxthat/c2ncl -y $BINARY_NAME-$VERSION-$CHANNEL ${BINARY_NAME}_${VERSION}_amd64.deb || true
+          gh release upload -R nxthat/c2ncl $BINARY_NAME-$VERSION-$CHANNEL target/debian/${BINARY_NAME}_${VERSION}_amd64.deb#c2ncl_amd64.deb
         env:
           GH_TOKEN: ${{ secrets.BOT_TOKEN }}
