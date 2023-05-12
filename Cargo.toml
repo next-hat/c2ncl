@@ -2,8 +2,16 @@
 name = "c2ncl"
 version = "0.0.1"
 edition = "2021"
+authors = ["Next Hat Contributors <team@next-hat.com>"]
+description = "Converts docker-compose.yml to nanocl StateFile.yml"
+readme = "README.md"
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+# Profile optimised for binary size
+[profile.release]
+opt-level = "z"
+strip = true
+lto = true
+codegen-units = 1
 
 [dependencies]
 anyhow = "1.0.71"

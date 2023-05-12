@@ -16,10 +16,10 @@ use clap::Parser;
 struct Args {
     /// Path to docker-compose file
     #[arg(short, long, default_value = "./docker-compose.yml")]
-    compose_file: String,
+    in_file: String,
 
     /// Output filepath
-    #[arg(short, long, default_value = "./StateFile")]
+    #[arg(short, long, default_value = "./StateFile.yml")]
     out_file: String,
 }
 
@@ -45,7 +45,7 @@ fn write_compose_file(
 fn main() -> Result<()> {
     let args = Args::parse();
 
-    let input_file = &args.compose_file;
+    let input_file = &args.in_file;
 
     let output_file = &args.out_file;
 

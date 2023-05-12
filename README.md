@@ -1,9 +1,19 @@
 # c2ncl
 
-Compose to nanocl converts docker-compose file to nanocl config
+Convert `docker-compose.yml` to `StateFile.yml`
 
 ## Usage
 
 ```sh
-c2ncl -c ../../docker-compose.yml ./example.Statefile
+$ c2ncl --help
+Converts docker-compose.yml to nanocl StateFile.yml
+
+Usage: c2ncl [OPTIONS]
+
+Options:
+  -i, --in-file <IN_FILE>    Path to docker-compose file [default: ./docker-compose.yml]
+  -o, --out-file <OUT_FILE>  Output filepath [default: ./StateFile.yml]
+  -h, --help                 Print help
+  -V, --version              Print version
+
 ```
