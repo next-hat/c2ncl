@@ -6,6 +6,7 @@ Convert `docker-compose.yml` to `StateFile.yml`
 
 ```sh
 $ c2ncl --help
+
 Converts docker-compose.yml to nanocl StateFile.yml
 
 Usage: c2ncl [OPTIONS]
