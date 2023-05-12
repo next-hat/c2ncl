@@ -6,8 +6,8 @@ fn build_proxy_rule(container_name: String, port: ports::PortRedirect) -> proxy:
     proxy::ProxyRuleStream {
         network: "Public".to_string(),
         target: nanocl_stubs::proxy::StreamTarget::Cargo(proxy::CargoTarget {
-            key: format!("{container_name}.global"),
-            port: port.output,
+            cargo_key: format!("{container_name}.global"),
+            cargo_port: port.output,
         }),
         port: port.input,
         protocol: port.protocol,
@@ -23,7 +23,7 @@ impl From<compose::Service> for resource::ResourcePartial {
 
         let config = proxy::ResourceProxyRule {
             watch: vec![format!("{name}.global")],
-            rule: proxy::ProxyRule::Stream(
+            rules: proxy::ProxyRule::Stream(
                 parsed_ports
                     .into_iter()
                     .map(|port| build_proxy_rule(name.clone(), port))

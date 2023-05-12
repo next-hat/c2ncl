@@ -1,4 +1,5 @@
-use std::{env, fs};
+use anyhow::{Context, Result};
+use std::fs;
 
 mod cargoes;
 mod compose;
@@ -14,30 +15,21 @@ use clap::Parser;
 #[command(author = "anonkey", version, about, long_about = None)]
 struct Args {
     /// Path to docker-compose file
-    #[arg(short, long, default_value_t = String::from("./docker-compose.yml"))]
+    #[arg(short, long, default_value = "./docker-compose.yml")]
     compose_file: String,
 
     /// Output filepath
-    #[arg(short, long, default_value_t = String::from("./Statefile"))]
+    #[arg(short, long, default_value = "./StateFile")]
     out_file: String,
 }
 
-fn read_compose_file(filepath: &str) -> Result<compose::ComposeFile, serde_yaml::Error> {
-    dbg!(filepath);
-    let compose_file = fs::read_to_string(filepath).expect("Could not open file.");
+fn read_compose_file(filepath: &str) -> Result<compose::ComposeFile> {
+    let compose_file = fs::read_to_string(filepath)
+        .with_context(|| format!("Error while trying to read {filepath}"))?;
+    let data = serde_yaml::from_str::<compose::ComposeFile>(&compose_file)
+        .with_context(|| format!("Error while trying to parse {filepath}"))?;
 
-    match serde_yaml::from_str::<compose::ComposeFile>(&compose_file) {
-        Ok(file) => Ok(file),
-        Err(_e) => {
-            // The top-level enum for Compose V2 and Compose V3 tends to swallow meaningful errors
-            // so re-parse the file as Compose V3 and print the error
-            if let Err(e) = serde_yaml::from_str::<compose::Compose>(&compose_file) {
-                eprintln!("Can't read {filepath} : {e}");
-                return Err(e);
-            }
-            Err(_e)
-        }
-    }
+    Ok(data)
 }
 
 fn write_compose_file(
@@ -50,16 +42,15 @@ fn write_compose_file(
     }
 }
 
-fn main() -> Result<(), std::io::Error> {
+fn main() -> Result<()> {
     let args = Args::parse();
 
     let input_file = &args.compose_file;
 
     let output_file = &args.out_file;
 
-    let compose_data = read_compose_file(input_file)
-        .map_err(|err| std::io::Error::new(std::io::ErrorKind::Other, err))?;
-
+    let compose_data = read_compose_file(input_file)?;
     let state = compose_data.into();
-    write_compose_file(output_file.to_owned(), state)
+    write_compose_file(output_file.to_owned(), state)?;
+    Ok(())
 }

@@ -46,12 +46,6 @@ pub struct Compose {
     pub extensions: HashMap<Extension, Value>,
 }
 
-impl Compose {
-    pub fn new() -> Self {
-        Default::default()
-    }
-}
-
 #[derive(Clone, Debug, Serialize, Deserialize, PartialEq, Eq)]
 #[serde(untagged)]
 pub enum Port {
@@ -320,7 +314,7 @@ pub enum Networks {
 #[serde(untagged)]
 pub enum BuildStep {
     Simple(String),
-    Advanced(AdvancedBuildStep),
+    Advanced(Box<AdvancedBuildStep>),
 }
 
 #[derive(Builder, Clone, Debug, Deserialize, Serialize, Eq, PartialEq, Default)]
