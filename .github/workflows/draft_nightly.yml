@@ -43,7 +43,7 @@ jobs:
           echo $VERSION
       # Package c2ncl into a .deb
       - name: Package
-        run: ./scripts/release_c2ncl.sh
+        run: ./scripts/release.sh
       - name: Test if release already exists
         id: release-exists
         continue-on-error: true
