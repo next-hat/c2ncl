@@ -12,14 +12,14 @@ use clap::Parser;
 
 /// Simple program to greet a person
 #[derive(Parser, Debug)]
-#[command(author = "anonkey", version, about, long_about = None)]
+#[clap(about, version, name = "c2ncl")]
 struct Args {
     /// Path to docker-compose file
-    #[arg(short, long, default_value = "./docker-compose.yml")]
+    #[arg(short = 'i', long)]
     in_file: String,
 
     /// Output filepath
-    #[arg(short, long, default_value = "./StateFile.yml")]
+    #[arg(short = 'o', long)]
     out_file: String,
 }
 
