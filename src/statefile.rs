@@ -38,7 +38,7 @@ impl From<ComposeFile> for Statefile {
 
         Statefile {
             kind: "Deployment".to_owned(),
-            api_version: "v0.7".to_owned(),
+            api_version: "v0.8".to_owned(),
             namespace: Some("global".to_owned()),
             cargoes: Some(cargoes),
             resources: Some(resources),
