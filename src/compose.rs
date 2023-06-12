@@ -87,7 +87,7 @@ pub struct Service {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub ulimits: Option<Ulimits>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub volumes: Option<Volumes>,
+    pub volumes: Option<Vec<Volume>>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub networks: Option<Networks>,
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -575,29 +575,24 @@ pub struct UpdateConfig {
 
 #[derive(Clone, Debug, Serialize, Deserialize, Eq, PartialEq, Hash)]
 #[serde(untagged)]
-pub enum Volumes {
-    Simple(Vec<String>),
-    Advanced(Vec<AdvancedVolumes>),
+pub enum Volume {
+    Simple(String),
+    Advanced(ComposeVolume),
 }
 
 #[derive(Clone, Debug, Serialize, Deserialize, Eq, PartialEq, Hash)]
-#[serde(deny_unknown_fields)]
-pub struct AdvancedVolumes {
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub source: Option<String>,
-    pub target: String,
-    #[serde(rename = "type")]
-    pub _type: String,
+pub struct ComposeVolumeOption {
     #[serde(default, skip_serializing_if = "std::ops::Not::not")]
-    pub read_only: bool,
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub volume: Option<Volume>,
+    pub nocopy: bool,
 }
 
-#[derive(Clone, Debug, Serialize, Deserialize, Eq, PartialEq, Hash, Default)]
-#[serde(deny_unknown_fields)]
-pub struct Volume {
-    pub nocopy: bool,
+#[derive(Clone, Debug, Serialize, Deserialize, Eq, PartialEq, Hash)]
+pub struct ComposeVolume {
+    #[serde(rename = "type")]
+    pub r#type: String,
+    pub source: String,
+    pub target: String,
+    pub volume: Option<ComposeVolumeOption>,
 }
 
 #[derive(Clone, Debug, Serialize, Deserialize, Eq, PartialEq, Hash)]

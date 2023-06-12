@@ -40,16 +40,17 @@ impl From<Service> for cargo_config::Config {
             healthcheck: option_into(config.healthcheck),
             image: config.image,
             host_config: Some(cargo_config::HostConfig {
-                binds: match config.volumes {
-                    Some(vol) => match vol {
-                        compose::Volumes::Simple(v) => Some(v),
-                        compose::Volumes::Advanced(v) => {
-                            eprint!("Can't convert advanced volume {:?}", v);
-                            None
-                        }
-                    },
-                    None => None,
-                },
+                binds: config.volumes.map(|volumes| {
+                    volumes
+                        .into_iter()
+                        .map(|volume| match volume {
+                            compose::Volume::Simple(v) => v,
+                            compose::Volume::Advanced(advanced_volume) => {
+                                format!("{}:{}", advanced_volume.source, advanced_volume.target)
+                            }
+                        })
+                        .collect()
+                }),
                 ..Default::default()
             }),
             working_dir: config.working_dir,
