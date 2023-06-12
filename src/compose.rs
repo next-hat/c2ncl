@@ -464,6 +464,7 @@ pub struct Ipam {
 #[serde(deny_unknown_fields)]
 pub struct IpamConfig {
     pub subnet: String,
+    pub gateway: Option<String>,
 }
 
 #[derive(Clone, Debug, Serialize, Deserialize, PartialEq, Default)]
