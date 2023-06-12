@@ -25,10 +25,10 @@ struct Args {
 fn read_compose_file(filepath: &str) -> Result<compose::ComposeFile> {
     let compose_file = fs::read_to_string(filepath)
         .with_context(|| format!("Error while trying to read {filepath}"))?;
-    let data = serde_yaml::from_str::<compose::ComposeFile>(&compose_file)
+    let data = serde_yaml::from_str::<compose::Compose>(&compose_file)
         .with_context(|| format!("Error while trying to parse {filepath}"))?;
 
-    Ok(data)
+    Ok(compose::ComposeFile::V2Plus(data))
 }
 
 fn write_compose_file(
