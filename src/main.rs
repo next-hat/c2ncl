@@ -10,7 +10,6 @@ mod statefile;
 mod utils;
 use clap::Parser;
 
-/// Simple program to greet a person
 #[derive(Parser, Debug)]
 #[clap(about, version, name = "c2ncl")]
 struct Args {
