@@ -10,15 +10,19 @@ mod statefile;
 mod utils;
 use clap::Parser;
 
+const DEFAULT_INPUT_FILE: &str = "./docker-compose.yml";
+const DEFAULT_OUTPUT_FILE: &str = "./Statefile.yml";
+
+/// C2ncl args
 #[derive(Parser, Debug)]
 #[clap(about, version, name = "c2ncl")]
 struct Args {
     /// Path to docker-compose file
-    #[arg(short = 'i', long)]
+    #[arg(short = 'i', long, default_value_t = DEFAULT_INPUT_FILE.to_string())]
     in_file: String,
 
     /// Output filepath
-    #[arg(short = 'o', long)]
+    #[arg(short = 'o', long, default_value_t = DEFAULT_OUTPUT_FILE.to_string())]
     out_file: String,
 }
 
