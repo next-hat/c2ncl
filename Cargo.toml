@@ -1,6 +1,6 @@
 [package]
 name = "c2ncl"
-version = "0.0.1"
+version = "0.0.2"
 edition = "2021"
 authors = ["Next Hat Contributors <team@next-hat.com>"]
 description = "Converts docker-compose.yml v2+ to nanocl StateFile.yml"
