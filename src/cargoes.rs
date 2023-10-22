@@ -103,6 +103,7 @@ impl From<Service> for CargoConfigPartial {
             replication: None,
             container: value.clone().into(),
             name: value.container_name.unwrap_or_default(),
+            ..Default::default()
         }
     }
 }
