@@ -1,6 +1,6 @@
 [package]
 name = "c2ncl"
-version = "0.0.1"
+version = "0.0.2"
 edition = "2021"
 authors = ["Next Hat Contributors <team@next-hat.com>"]
 description = "Converts docker-compose.yml v2+ to nanocl StateFile.yml"
@@ -18,7 +18,9 @@ anyhow = "1.0.71"
 bollard-next = "0.15.0"
 clap = { version = "4.2.2", features = ["derive"] }
 derive_builder = "0.12.0"
-nanocl_stubs = { version = "0.8.0", features = ["serde"] }
+dialoguer = "0.11.0"
+docker-compose-types = "0.5.0"
+nanocl_stubs = { version = "0.10.0", features = ["serde"] }
 regex = "1.7.3"
 serde = { version = "1.0.160", features = ["derive"] }
 serde_json = "1.0.96"
