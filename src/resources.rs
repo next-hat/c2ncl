@@ -8,7 +8,6 @@ fn build_proxy_rule(container_name: String, port: ports::PortRedirect) -> proxy:
         target: nanocl_stubs::proxy::StreamTarget::Upstream(proxy::UpstreamTarget {
             key: format!("{container_name}.global.c"),
             port: port.output,
-            // TODO: add default
             path: None,
             disable_logging: None,
         }),
@@ -23,7 +22,6 @@ impl From<compose::Service> for resource::ResourcePartial {
         let name = value.container_name.unwrap_or_default();
         let full_name = value.hostname.unwrap_or(name.clone());
         let parsed_ports = ports::translate_ports(value.ports).unwrap_or_default();
-
         let config = proxy::ResourceProxyRule {
             rules: parsed_ports
                 .into_iter()
@@ -35,7 +33,6 @@ impl From<compose::Service> for resource::ResourcePartial {
             kind: "ProxyRule".to_string(),
             version: "v0.7".to_string(),
             data: serde_json::json!(config),
-            // TODO: default trait
             metadata: None,
         }
     }

@@ -1,9 +1,9 @@
-use std::fs;
-
 use anyhow::{Context, Result};
 use clap::Parser;
 use dialoguer::theme::ColorfulTheme;
 use dialoguer::Confirm;
+use std::fs;
+use std::io;
 
 mod cargoes;
 mod compose;
@@ -45,7 +45,7 @@ struct Args {
 ///
 /// * [Result](Result) The result of the operation
 ///   * [Ok](()) The operation is confirmed
-///   * [Err](IoError) An error occured
+///   * [Err](io::Error) An error occured
 ///
 pub fn confirm(msg: &str) -> Result<()> {
     let result = Confirm::with_theme(&ColorfulTheme::default())
@@ -54,7 +54,7 @@ pub fn confirm(msg: &str) -> Result<()> {
         .interact();
     match result {
         Ok(true) => Ok(()),
-        _ => Err(std::io::Error::new(std::io::ErrorKind::Interrupted, "interupted by user").into()),
+        _ => Err(io::Error::new(io::ErrorKind::Interrupted, "interupted by user").into()),
     }
 }
 
@@ -63,7 +63,6 @@ fn read_compose_file(filepath: &str) -> Result<compose::ComposeFile> {
         .with_context(|| format!("Error while trying to read {filepath}"))?;
     let data = serde_yaml::from_str::<compose::Compose>(&compose_file)
         .with_context(|| format!("Error while trying to parse {filepath}"))?;
-
     Ok(compose::ComposeFile::V2Plus(data))
 }
 
@@ -79,15 +78,11 @@ fn write_compose_file(
 
 fn main() -> Result<()> {
     let args = Args::parse();
-
     let input_file = &args.in_file;
-
     let output_file = &args.out_file;
-
     if !args.skip_confirm && fs::metadata(output_file).is_ok() {
         confirm(&format!("Overwrite  {}?", output_file))?;
     }
-
     let compose_data = read_compose_file(input_file)?;
     let state = compose_data.into();
     write_compose_file(output_file.to_owned(), state)?;
