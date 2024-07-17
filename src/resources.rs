@@ -10,6 +10,7 @@ fn build_proxy_rule(container_name: String, port: ports::PortRedirect) -> proxy:
             port: port.output,
             path: None,
             disable_logging: None,
+            ssl: None,
         }),
         port: port.input,
         protocol: port.protocol,
@@ -30,8 +31,7 @@ impl From<compose::Service> for resource::ResourcePartial {
         };
         resource::ResourcePartial {
             name: full_name,
-            kind: "ProxyRule".to_string(),
-            version: "v0.7".to_string(),
+            kind: "ncproxy.io/rule".to_string(),
             data: serde_json::json!(config),
             metadata: None,
         }

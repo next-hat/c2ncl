@@ -1,30 +1,30 @@
 use std::collections::HashMap;
 
-use nanocl_stubs::cargo_config::{self, CargoConfigPartial};
+use nanocl_stubs::cargo_spec::{CargoSpecPartial, Config, HostConfig};
 
 use crate::{
-    compose::{self, Environment, Service},
+    compose,
     utils::{
         atoi::atoi64,
         options::{option_fold_empty_object, option_into},
     },
 };
 
-impl From<Environment> for Vec<String> {
-    fn from(value: Environment) -> Self {
+impl From<compose::Environment> for Vec<String> {
+    fn from(value: compose::Environment) -> Self {
         match value {
-            Environment::KvPair(map) => map
+            compose::Environment::KvPair(map) => map
                 .iter()
                 .map(|(key, value)| format!("{key}={}", value.clone().unwrap_or_default()))
                 .collect(),
-            Environment::List(v) => v,
+            compose::Environment::List(v) => v,
         }
     }
 }
 
-impl From<Service> for cargo_config::Config {
-    fn from(config: Service) -> cargo_config::Config {
-        cargo_config::Config {
+impl From<compose::Service> for Config {
+    fn from(config: compose::Service) -> Config {
+        Config {
             hostname: config.hostname,
             user: config.user,
             exposed_ports: option_fold_empty_object(config.expose),
@@ -39,7 +39,7 @@ impl From<Service> for cargo_config::Config {
             }),
             healthcheck: option_into(config.healthcheck),
             image: config.image,
-            host_config: Some(cargo_config::HostConfig {
+            host_config: Some(HostConfig {
                 binds: config.volumes.map(|volumes| {
                     volumes
                         .into_iter()
@@ -97,9 +97,9 @@ impl From<Service> for cargo_config::Config {
     }
 }
 
-impl From<Service> for CargoConfigPartial {
-    fn from(value: Service) -> Self {
-        CargoConfigPartial {
+impl From<compose::Service> for CargoSpecPartial {
+    fn from(value: compose::Service) -> Self {
+        CargoSpecPartial {
             replication: None,
             container: value.clone().into(),
             name: value.container_name.unwrap_or_default(),

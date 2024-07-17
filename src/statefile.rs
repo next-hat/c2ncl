@@ -1,4 +1,4 @@
-use nanocl_stubs::{cargo_config, resource};
+use nanocl_stubs::{cargo_spec, resource};
 use serde::{Deserialize, Serialize};
 
 use crate::compose::{ComposeFile, Service};
@@ -6,11 +6,10 @@ use crate::compose::{ComposeFile, Service};
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "PascalCase")]
 pub struct Statefile {
-    pub kind: String,
     pub api_version: String,
     pub namespace: Option<String>,
     pub resources: Option<Vec<resource::ResourcePartial>>,
-    pub cargoes: Option<Vec<cargo_config::CargoConfigPartial>>,
+    pub cargoes: Option<Vec<cargo_spec::CargoSpecPartial>>,
 }
 
 impl From<ComposeFile> for Statefile {
@@ -29,7 +28,7 @@ impl From<ComposeFile> for Statefile {
                             resources.push(resource::ResourcePartial::from(s));
                         }
 
-                        cargoes.push(cargo_config::CargoConfigPartial::from(mutable_service));
+                        cargoes.push(cargo_spec::CargoSpecPartial::from(mutable_service));
                     }
                 })
             })),
@@ -37,8 +36,7 @@ impl From<ComposeFile> for Statefile {
         };
 
         Statefile {
-            kind: "Deployment".to_owned(),
-            api_version: "v0.10".to_owned(),
+            api_version: "v0.15".to_owned(),
             namespace: Some("global".to_owned()),
             cargoes: Some(cargoes),
             resources: Some(resources),

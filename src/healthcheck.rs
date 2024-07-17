@@ -19,6 +19,7 @@ impl From<Healthcheck> for HealthConfig {
             timeout: atoi64(value.timeout),
             retries: Some(value.retries),
             start_period: atoi64(value.start_period),
+            start_interval: Some(0),
         }
     }
 }
