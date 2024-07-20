@@ -15,7 +15,7 @@ env:
 jobs:
   release_image:
     runs-on: ubuntu-latest
-    container: rust:1.69.0-alpine3.17
+    container: rust:1.78.0-alpine3.20
 
     steps:
       # Install required dependencies
@@ -51,13 +51,13 @@ jobs:
           GH_TOKEN: ${{ secrets.BOT_TOKEN }}
       - name: Create new draft release
         if: steps.release-exists.outcome == 'failure' && steps.release-exists.conclusion == 'success'
-        run: gh release create -R nxthat/c2ncl -d $BINARY_NAME-$VERSION -t $BINARY_NAME-$VERSION -F changelog.md target/debian/${BINARY_NAME}_${VERSION}_amd64.deb#c2ncl_amd64.deb
+        run: gh release create -R next-hat/c2ncl -d $BINARY_NAME-$VERSION -t $BINARY_NAME-$VERSION -F changelog.md target/debian/${BINARY_NAME}_${VERSION}_amd64.deb#c2ncl_amd64.deb
         env:
           GH_TOKEN: ${{ secrets.BOT_TOKEN }}
       - name: Update draft release
         if: steps.release-exists.outcome == 'success' && steps.release-exists.conclusion == 'success'
         run: |
-          gh release delete-asset -R nxthat/c2ncl -y $BINARY_NAME-$VERSION ${BINARY_NAME}_${VERSION}_amd64.deb || true
-          gh release upload -R nxthat/c2ncl $BINARY_NAME-$VERSION target/debian/${BINARY_NAME}_${VERSION}_amd64.deb#c2ncl_amd64.deb
+          gh release delete-asset -R next-hat/c2ncl -y $BINARY_NAME-$VERSION ${BINARY_NAME}_${VERSION}_amd64.deb || true
+          gh release upload -R next-hat/c2ncl $BINARY_NAME-$VERSION target/debian/${BINARY_NAME}_${VERSION}_amd64.deb#c2ncl_amd64.deb
         env:
           GH_TOKEN: ${{ secrets.BOT_TOKEN }}
